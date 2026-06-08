@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: mi-laravel-app
+    env: node
+    buildCommand: "composer install && php artisan migrate --force"
+    startCommand: "php artisan serve --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        value: base64:xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://mi-laravel-app.onrender.com
