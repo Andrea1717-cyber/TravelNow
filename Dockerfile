@@ -1,28 +1,25 @@
-# Imagen base oficial de PHP con extensiones necesarias
 FROM php:8.2-fpm
 
-# Instalar dependencias del sistema y extensiones de PHP
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    git curl libpng-dev libonig-dev libxml2-dev zip unzip \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
+    git curl zip unzip libpng-dev libonig-dev libxml2-dev
+
+# Descargar y habilitar el script de extensiones
+RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions \
+    -o /usr/local/bin/install-php-extensions && \
+    chmod +x /usr/local/bin/install-php-extensions
+
+# Instalar extensiones necesarias para Laravel
+RUN install-php-extensions pdo_mysql mbstring exif pcntl bcmath gd
 
 # Instalar Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# Crear directorio de la aplicación
 WORKDIR /var/www
-
-# Copiar archivos del proyecto
 COPY . .
 
-# Instalar dependencias de Laravel
 RUN composer install --optimize-autoloader --no-dev
-
-# Generar cache de configuración y rutas
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
-# Exponer el puerto que Render asigna
 EXPOSE 8000
-
-# Comando de inicio del servidor Laravel
 CMD php artisan serve --host=0.0.0.0 --port=8000
