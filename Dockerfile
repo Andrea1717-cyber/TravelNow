@@ -31,7 +31,7 @@ RUN composer install --no-dev --optimize-autoloader
 # Dar permisos correctos a las carpetas de Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Limpiar cachés viejos, ejecutar migraciones y arrancar Apache en vivo
-CMD php artisan config:clear && php artisan cache:clear && php artisan migrate --force && apache2-foreground
+# Ejecutar primero las migraciones para crear las tablas, luego limpiar configuraciones y arrancar Apache
+CMD php artisan migrate --force && php artisan config:clear && php artisan cache:clear && apache2-foreground
 
 EXPOSE 80
