@@ -28,8 +28,8 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Dar permisos correctos a las carpetas de Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Dar permisos totales de lectura, escritura y ejecución a storage y cache
+RUN chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Ejecutar primero las migraciones para crear las tablas, luego limpiar configuraciones y arrancar Apache
 CMD php artisan migrate --force && php artisan config:clear && php artisan cache:clear && apache2-foreground
