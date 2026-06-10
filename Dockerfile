@@ -31,4 +31,12 @@ RUN composer install --no-dev --optimize-autoloader
 # Dar permisos correctos a las carpetas de Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
+# --- AÑADE ESTAS LÍNEAS JUSTO AQUÍ ---
+# Optimizar la configuración de Laravel para producción
+RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
+
+# Ejecutar las migraciones automáticamente al arrancar
+CMD php artisan migrate --force && apache2-foreground
+
+
 EXPOSE 80
