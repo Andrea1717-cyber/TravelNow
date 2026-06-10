@@ -1,3 +1,4 @@
+<?php
 use Illuminate\Support\Facades\Route;
 
 // Forzar la ruta raíz a que apunte a la vista principal real de tu proyecto
