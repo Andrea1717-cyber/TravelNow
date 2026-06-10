@@ -37,6 +37,6 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Ejecutar primero las migraciones para crear las tablas, luego limpiar configuraciones y arrancar Apache
-CMD php artisan migrate --force && php artisan config:clear && php artisan cache:clear && apache2-foreground
+CMD php artisan route:clear && php artisan config:clear && php artisan cache:clear && php artisan migrate --force && apache2-foreground
 
 EXPOSE 80
