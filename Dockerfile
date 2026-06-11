@@ -37,6 +37,5 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
 ## Borrar físicamente los archivos de caché guardados y arrancar limpio
-CMD php artisan config:clear && php artisan route:clear && php artisan cache:clear && apache2-foreground
-
+CMD apache2-foreground
 EXPOSE 80
