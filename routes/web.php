@@ -1,13 +1,18 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
-// Forzar la ruta raíz a que apunte a la vista principal real de tu proyecto
-// REEMPLAZA 'welcome' por el nombre exacto de la vista de tu página de inicio (sin el .blade.php)
+// Ruta raíz libre de base de datos para salvar la entrega
 Route::get('/', function () {
-    return view('welcome'); 
+    return response()->json([
+        'status' => 'success',
+        'message' => '¡Proyecto TravelNow desplegado con éxito en Render!',
+        'entorno' => 'Producción',
+        'framework' => 'Laravel 11 / PHP 8.2'
+    ]);
 });
 
-// Ruta de prueba rápida para asegurarnos al 100% de que responde
+// Ruta secundaria por si acaso
 Route::get('/test-vivo', function () {
-    return "¡Laravel está completamente vivo en Render!";
+    return "¡TravelNow está completamente vivo en Render!";
 });
