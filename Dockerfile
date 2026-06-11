@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Instalar dependencias del sistema y extensiones de PHP requeridas por Laravel y Postgres
+# Instalar dependencias del sistema y forzar drivers de Postgres
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql pgsql
+    && docker-php-ext-install gd pdo pdo_pgsql pgsql
 
 # Habilitar mod_rewrite de Apache para Laravel
 RUN a2enmod rewrite
@@ -32,10 +32,11 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Configurar dueños y permisos para Linux
+# Configurar permisos para que Linux no bloquee a Laravel
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
-## Borrar físicamente los archivos de caché guardados y arrancar limpio
-CMD apache2-foreground
+# Comando de arranque: Limpiar cachés y encender el servidor limpio
+CMD php artisan config:clear && php artisan route:clear && php artisan cache:clear && apache2-foreground
+
 EXPOSE 80
